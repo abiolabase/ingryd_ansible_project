@@ -1,0 +1,62 @@
+---
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: Update repo and Install apache2 and php packages
+    apt:
+      update_cache: yes
+      name: 
+        - apache2
+        - libapache2-mod-php
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Update repo and Install apache2 and php packages
+    tags: apache,apache2,ubuntu
+    dnf:
+      update_cache: yes
+      name: 
+        - httpd
+        - php
+      state: latest
+    when: ansible_distribution == "Rocky"
+
+
+- hosts: file_servers
+  become: true
+  tasks:
+
+  - name: Install Samba (OracleLinux, Ubuntu)
+    package:
+      name: 
+        - samba
+      state: latest
+
+  - name: Install NFS Server (OracleLinux)
+    dnf:
+      name: 
+        - nfs-utils
+      state: latest
+    when: ansible_distribution == "OracleLinux"
+
+  - name: Install NFS Server (Ubuntu)
+    apt:
+      name: 
+        - nfs-kernel-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: Install MariaDB package (Rocky)
+    tags: mariadb,database,rocky
+    dnf:
+      name: 
+        - mariadb
+      state: latest
+
