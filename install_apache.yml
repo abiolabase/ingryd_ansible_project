@@ -5,9 +5,20 @@
   tasks:
 
   - name: Update repo and Install apache2 and php packages
-    package:
+    apt:
       update_cache: yes
       name: 
-        - "{{ apache_package }}"
-        - "{{ php_package }}"
+        - apache2
+        - libapache2-mod-php
       state: latest
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Update repo and Install apache2 and php packages
+    dnf:
+      update_cache: yes
+      name: 
+        - httpd
+        - php
+      state: latest
+    when: ansible_distribution == "Rocky"
+
