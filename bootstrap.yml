@@ -1,0 +1,31 @@
+---
+
+# Plays for all hosts
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Create oga user
+    tags: always
+    user:
+      name: oga
+      groups: root
+      shell: /bin/bash
+
+  - name: Add ssh key for Oga
+    tags: always
+    authorized_key:
+      user: oga
+      key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILh2tyg1FALY85F3rS9lFic/iMYiHZ6pEr17ATu8O8LN ansible
+
+  - name: Add a sudoer file for Oga
+    tags: always
+    copy:
+      src: sudoer_oga
+      dest: /etc/sudoers.d/oga
+      owner: root
+      group: root
+      mode: 0440
+
+
+
